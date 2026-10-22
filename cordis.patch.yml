@@ -1,0 +1,8 @@
+# Additive: inserts exactly one plugin row and touches nothing else.
+# The profile can override its config later:
+#   - id: memory
+#     config:
+#       userMaxChars: 2000
+- insert:
+    - id: memory
+      name: 'dsh-memory'
