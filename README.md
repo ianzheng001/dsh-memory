@@ -143,7 +143,7 @@ supersededBy: null
 ## 开发
 
 ```bash
-npm test        # node --test，44 个用例
+npm test        # node --test 全套用例
 ```
 
 结构：
