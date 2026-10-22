@@ -133,6 +133,22 @@ supersededBy: null
 2. **只注入索引，不全量灌正文**。超预算的条目降级成一行摘要并显式告知「还有 N 条」，模型需要时再 `memory_recall`。
 3. **纠错不撕历史**。`replace` 把旧条目标 `supersededBy` 并停止注入，文件保留可追溯；`memory_forget` 只移到 `archive/`，永不 `unlink`。
 
+## 从 Claude Code 导入已有记忆
+
+Claude Code 的记忆在 `~/.claude/projects/<编码后的cwd>/memory/*.md`。导入脚本把它们映射回真实目录、
+按 dsh 的项目根归桶，再走和插件相同的存储层：
+
+```bash
+node scripts/import-claude-memory.mjs            # dry-run，列出计划和跳过原因
+node scripts/import-claude-memory.mjs --apply    # 写入
+```
+
+- 幂等：已存在的条目默认跳过，`--overwrite` 强制覆盖
+- 编码是 lossy 的（`/`、`_`、`.`、`-` 都变成 `-`），所以脚本按「真实目录的编码」前缀匹配反解，
+  目录已不存在的记忆会被列出来跳过
+- `feedback_*` → `preference`，`project_*` / `reference_*` → `fact`
+- 原文的 `description` 变成标题（第一个短句）+ 正文开头的一行引用
+
 ## 限制
 
 - 无 Settings UI（v1.1 计划），改配置走 profile patch
